@@ -21,11 +21,9 @@ void main()
     printf("0 = left, 1 = right\nEnter the direction: ");
     scanf("%d", &dir);
 
-    // include head in request queue
     rq[n] = head;
     n++;
 
-    // sort requests in ascending order
     for(i = 0; i < n - 1; i++)
     {
         for(j = 0; j < n - i - 1; j++)
@@ -39,7 +37,6 @@ void main()
         }
     }
 
-    // find head position in sorted list
     for(i = 0; i < n; i++)
     {
         if(rq[i] == head)
@@ -52,7 +49,7 @@ void main()
     printf("\nLOOK service order:\n");
     printf("%d", head);
 
-    if(dir == 1) // moving right
+    if(dir == 1)
     {
         for(i = pos + 1; i < n; i++)
         {
@@ -68,7 +65,7 @@ void main()
             printf(" -> %d", head);
         }
     }
-    else // moving left
+    else
     {
         for(i = pos - 1; i >= 0; i--)
         {

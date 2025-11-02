@@ -1,87 +1,56 @@
-#include <stdio.h>
-#include <limits.h>
+#include<stdio.h>
+#include<limits.h>
+int main() {
+    int n, frames;
+    scanf("%d", &n);
 
-void lru_page_replacement() {
-    int q[30], p[30], l, m, i, j, k = 0, x, c[30];
-    int page_faults = 0;
-    int c1;
-
-    printf("Enter the number of frames (m): ");
-    scanf("%d", &m);
-
-    printf("Enter the length of reference string (l): ");
-    scanf("%d", &l);
-
-    printf("Enter the reference string: ");
-    for (i = 0; i < l; i++) {
-        scanf("%d", &q[i]);
+    int pages[n];
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &pages[i]);
     }
 
-    for (i = 0; i < m; i++) {
-        p[i] = -1;
-        c[i] = 0;
+    scanf("%d", &frames);
+
+    int fr[frames], r[frames];
+    for (int i = 0; i < frames; i++) {
+        fr[i] = -1;
+        r[i] = 0;
     }
 
-    printf("\nReference String\tFrames\t\tPage Faults\n");
-    printf("--------------------------------------------------\n");
-
-    for (i = 0; i < l; i++) {
-        x = q[i];
-        c1 = 0;
-
-        for (j = 0; j < m; j++) {
-            if (p[j] == x) {
-                c1 = 1;
-                c[j] = i + 1;
+    int pgft = 0, time = 0;
+    for (int i = 0; i < n; i++) {
+        int p = pages[i], found = 0;
+        for (int j = 0; j < frames; j++) {
+            if (fr[j] == p) {
+                r[j] = time++;
+                found = 1;
                 break;
             }
         }
-
-        printf("%d\t\t\t", x);
-
-        if (c1 == 0) {
-            page_faults++;
-
-            if (k < m) {
-                p[k] = x;
-                c[k] = i + 1;
-                k++;
-            } else {
-                int min = INT_MAX;
-                int replace_index = -1;
-
-                for (j = 0; j < m; j++) {
-                    if (c[j] < min) {
-                        min = c[j];
-                        replace_index = j;
-                    }
+        if (!found) {
+            int replaceindex = -1, mintime = INT_MAX;
+            for (int j = 0; j < frames; j++) {
+                if (fr[j] == -1) {
+                    replaceindex = j;
+                    break;
                 }
-
-                p[replace_index] = x;
-                c[replace_index] = i + 1;
+                if (r[j] < mintime) {
+                    mintime = r[j];
+                    replaceindex = j;
+                }
             }
+            fr[replaceindex] = p;
+            r[replaceindex] = time++;
+            pgft++;
         }
-
-        for (j = 0; j < m; j++) {
-            if (p[j] != -1) {
-                printf("%d ", p[j]);
-            } else {
-                printf("- ");
-            }
+        printf("Page %d -> ", p);
+        for (int j = 0; j < frames; j++) {
+            if (fr[j] == -1) printf("- ");
+            else printf("%d ", fr[j]);
         }
-
-        if (c1 == 0) {
-            printf("\tFault");
-        } else {
-            printf("\tHit");
-        }
+        if (!found) printf("Page Fault");
         printf("\n");
     }
-
-    printf("\nTOTAL number of page faults: %d\n", page_faults);
-}
-
-int main() {
-    lru_page_replacement();
+    printf("Total Page Faults: %d\n", pgft);
     return 0;
 }

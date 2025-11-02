@@ -27,7 +27,6 @@ public class client {
                 System.out.println(v[i]);
             }
 
-            // Randomly mark a frame as lost (-1)
             rand = rands.nextInt(p);
             v[rand] = -1;
 
